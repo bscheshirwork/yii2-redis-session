@@ -85,7 +85,7 @@ class Session extends \yii\redis\Session
      */
     public function destroyUserSessions(int $userIdentityId): bool
     {
-        if ($sessionIds = $this->redis->zrange($this->keyUser($userIdentityId), '-inf', '+inf')) {
+        if ($sessionIds = $this->redis->zrangebyscore($this->keyUser($userIdentityId), '-inf', '+inf')) {
             foreach ($sessionIds ?? [] as $id) {
                 parent::destroySession($id);
                 $this->redis->del($this->keySession($id));
