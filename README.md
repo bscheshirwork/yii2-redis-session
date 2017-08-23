@@ -25,7 +25,7 @@ To use redis Session as the session application component, configure the applica
 
 Add 
 ```
-    "bscheshirwork/yii2-redis-sesion": "*@dev",
+    "bscheshirwork/yii2-redis-session": "*@dev",
 ```
 into your `composer.json` `require` section.
 
