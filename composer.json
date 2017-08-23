@@ -12,7 +12,7 @@
     ],
     "support": {
         "issues": "https://github.com/bscheshirwork/yii2-redis-session/issues",
-        "source": "https://github.com/bscheshirwork/yii2-redis-session",
+        "source": "https://github.com/bscheshirwork/yii2-redis-session"
     },
     "require": {
         "php": ">=7.0.0",
