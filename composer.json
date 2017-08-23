@@ -1,0 +1,32 @@
+{
+    "name": "bscheshirwork/yii2-redis-session",
+    "description": "Yii2 session based on Redis, can separate session by user",
+    "type": "yii2-extension",
+    "keywords": ["yii", "session", "redis"],
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Bogdan Stepanenko",
+            "email": "bscheshirwork@gmail.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/bscheshirwork/yii2-redis-session/issues",
+        "source": "https://github.com/bscheshirwork/yii2-redis-session",
+    },
+    "require": {
+        "php": ">=7.0.0",
+        "yiisoft/yii2-redis": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "bscheshirwork\\redis\\": "src"
+        }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ]
+}
