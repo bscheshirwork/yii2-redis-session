@@ -2,7 +2,6 @@
 
 namespace bscheshirwork\redis;
 
-
 /**
  * Redis Session implements a session component using [redis](http://redis.io/) as the storage medium.
  *
@@ -55,9 +54,10 @@ class Session extends \yii\redis\Session
         if ($result) {
             $userIdentityId = \Yii::$app->user->getIdentity(false)->getId() ?? 0;
             $key = $this->keyUser($userIdentityId);
-            $result = (bool)$this->redis->zadd($key, 'CH', time(), $id);
-            $result = $result && (bool)$this->redis->set($this->keySession($id), $userIdentityId);
+            $result = (bool) $this->redis->zadd($key, 'CH', time(), $id);
+            $result = $result && (bool) $this->redis->set($this->keySession($id), $userIdentityId);
         }
+
         return $result;
     }
 
@@ -70,10 +70,11 @@ class Session extends \yii\redis\Session
     public function destroySession($id): bool
     {
         parent::destroySession($id);
-        if ($userIdentityId = (int)$this->redis->get($this->keySession($id))) {
+        if ($userIdentityId = (int) $this->redis->get($this->keySession($id))) {
             $this->redis->zrem($this->keyUser($userIdentityId), $id);
         }
         $this->redis->del($this->keySession($id));
+
         return true;
     }
 
@@ -92,13 +93,15 @@ class Session extends \yii\redis\Session
             }
         }
         $this->redis->del($this->keyUser($userIdentityId));
+
         return true;
     }
 
     /**
      * Destroy all expired session's dependencies
      */
-    public function removeExpired(){
+    public function removeExpired()
+    {
         if ($keys = $this->redis->keys($this->maskUser())) {
             foreach ($keys ?? [] as $key) {
                 $this->redis->multi();
@@ -113,6 +116,7 @@ class Session extends \yii\redis\Session
                 }
             }
         }
+
         return true;
     }
 
@@ -130,6 +134,7 @@ class Session extends \yii\redis\Session
                 }
             }
         }
+
         return $userIdentityIds;
     }
 
@@ -156,6 +161,7 @@ class Session extends \yii\redis\Session
                 $sessions = $sessions + $this->getSessionsByKey($key);
             }
         }
+
         return $sessions;
     }
 
@@ -225,7 +231,7 @@ class Session extends \yii\redis\Session
      */
     private function getSessionIdsByKey(string $key, bool $withScores = false): array
     {
-        if($withScores){
+        if ($withScores) {
             return $this->redis->zrevrangebyscore($key, time(), time() - $this->getTimeout(), 'WITHSCORES');
         } else {
             return $this->redis->zrevrangebyscore($key, time(), time() - $this->getTimeout());
@@ -246,6 +252,7 @@ class Session extends \yii\redis\Session
                 $sessions[] = $this->readSession($value);
             }
         }
+
         return $sessions;
     }
 }
