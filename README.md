@@ -1,5 +1,6 @@
 # yii2-redis-session
-Based on yii2-redis session. Can remove user's sessions by user identity id. Can get a online users.
+Based on [yii2-redis](https://github.com/yiisoft/yii2-redis) session. Can remove user's sessions by user identity id. 
+Can get a online users.
 
 Redis Session implements a session component using [redis](http://redis.io/) as the storage medium.
  
