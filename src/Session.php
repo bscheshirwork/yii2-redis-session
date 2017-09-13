@@ -157,6 +157,7 @@ class Session extends \yii\redis\Session
     {
         $sessions = [];
         if ($keys = $this->redis->keys($this->maskUser())) {
+            sort($keys, SORT_STRING);
             foreach ($keys ?? [] as $key) {
                 foreach ($this->getSessionsByKey($key) as $session) {
                     $sessions[] = $session;
