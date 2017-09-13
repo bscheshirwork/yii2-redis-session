@@ -51,8 +51,8 @@ class Session extends \yii\redis\Session
     public function writeSession($id, $data)
     {
         $result = parent::writeSession($id, $data);
-        if ($result) {
-            $userIdentityId = \Yii::$app->user->getIdentity(false)->getId() ?? 0;
+        if ($result && ($userIdentity = \Yii::$app->user->getIdentity(false) ?? false)) {
+            $userIdentityId = $userIdentity->getId() ?? 0;
             $key = $this->keyUser($userIdentityId);
             $result = (bool) $this->redis->zadd($key, 'CH', time(), $id);
             $result = $result && (bool) $this->redis->set($this->keySession($id), $userIdentityId);
@@ -158,7 +158,9 @@ class Session extends \yii\redis\Session
         $sessions = [];
         if ($keys = $this->redis->keys($this->maskUser())) {
             foreach ($keys ?? [] as $key) {
-                $sessions = $sessions + $this->getSessionsByKey($key);
+                foreach ($this->getSessionsByKey($key) as $session) {
+                    $sessions[] = $session;
+                }
             }
         }
 
