@@ -235,9 +235,9 @@ class Session extends \yii\redis\Session
     {
         if ($withScores) {
             return $this->redis->zrevrangebyscore($key, time(), time() - $this->getTimeout(), 'WITHSCORES');
-        } else {
-            return $this->redis->zrevrangebyscore($key, time(), time() - $this->getTimeout());
         }
+
+        return $this->redis->zrevrangebyscore($key, time(), time() - $this->getTimeout());
     }
 
     /**
