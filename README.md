@@ -51,3 +51,7 @@ Get all active sessions
 ```php
 \Yii::$app->session->getActiveSessions();
 ```
+
+## Tests
+
+See [this (ru)](./docs/tests.md) guide for create PHPUnit suite

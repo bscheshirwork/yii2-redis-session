@@ -1,0 +1,23 @@
+# Local run unit tests
+# for docker-compose CLI like this manual https://blog.jetbrains.com/phpstorm/2016/11/docker-remote-interpreters/
+# run directly:
+# docker-compose -f ./tests/docker-compose.yml run --rm --entrypoint bash php
+# and run `composer install` before first time use
+version: '2'
+services:
+  php:
+    image: bscheshir/codeception:php7.1.9-fpm-yii2 #contain phpunit
+    volumes:
+      - ..:/project #src and tests shared to container
+      - ~/.composer/cache:/root/.composer/cache
+    environment:
+      TZ: Europe/Moscow
+      XDEBUG_CONFIG: "remote_host=192.168.0.83 remote_port=9002 remote_enable=On"
+      PHP_IDE_CONFIG: "serverName=codeception"
+    depends_on:
+      - redis
+  redis:
+    image: redis:4.0.1-alpine
+    restart: always
+    ports:
+      - "6379"

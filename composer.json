@@ -15,7 +15,7 @@
         "source": "https://github.com/bscheshirwork/yii2-redis-session"
     },
     "require": {
-        "php": ">=7.0.0",
+        "php": ">=7.1.0",
         "yiisoft/yii2-redis": "*"
     },
     "autoload": {
