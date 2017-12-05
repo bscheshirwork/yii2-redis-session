@@ -8,7 +8,19 @@ Redis Session requires redis version 3.0.2 or higher to work properly.
 
 It needs to be configured with a redis [[Connection]] that is also configured as an application component.
 
-By default it will use the `redis` application component.
+By default it will use the `redis` application component (see [yii2-redis](https://github.com/yiisoft/yii2-redis) for more info).
+```php
+[
+    'components' => [
+        'redis' => [
+            'class' => 'yii\redis\Connection',
+            'hostname' => 'localhost',
+            'port' => 6379,
+            'database' => 0,
+        ],
+    ]
+]
+```
 
 To use redis Session as the session application component, configure the application as follows,
 ```php
