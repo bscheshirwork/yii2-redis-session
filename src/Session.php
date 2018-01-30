@@ -54,7 +54,7 @@ class Session extends \yii\redis\Session
         if ($result && ($userIdentity = \Yii::$app->user->getIdentity(false) ?? false)) {
             $userIdentityId = $userIdentity->getId() ?? 0;
             $key = $this->keyUser($userIdentityId);
-            $result = (bool) $this->redis->zadd($key, 'CH', time(), $id);
+            $result = (bool) $this->redis->zadd($key, 'CH', $this->time(), $id);
             $result = $result && (bool) $this->redis->set($this->keySession($id), $userIdentityId);
         }
 
@@ -105,8 +105,8 @@ class Session extends \yii\redis\Session
         if ($keys = $this->redis->keys($this->maskUser())) {
             foreach ($keys ?? [] as $key) {
                 $this->redis->multi();
-                $this->redis->zrangebyscore($key, '-inf', time() - $this->getTimeout());
-                $this->redis->zremrangebyscore($key, '-inf', time() - $this->getTimeout());
+                $this->redis->zrangebyscore($key, '-inf', $this->expiredTime());
+                $this->redis->zremrangebyscore($key, '-inf', $this->expiredTime());
                 $exec = $this->redis->exec();
                 if ($sessionIds = $exec[0]) {
                     $this->redis->del(...array_map(function ($sessionId){
@@ -167,6 +167,30 @@ class Session extends \yii\redis\Session
 
         return $sessions;
     }
+
+    /**
+     * Get the timestamp of the start of the request with microsecond precision.
+     */
+    public function time()
+    {
+        return $_SERVER["REQUEST_TIME_FLOAT"];
+    }
+
+    /**
+     * Get the timestamp of the expiry of session
+     * @param bool $cached save first-time calculated value
+     * @return float
+     */
+    public function expiredTime($cached = true)
+    {
+        if ($cached) {
+            return $this->expiredTimeCache ?: $this->expiredTimeCache = $this->time() - $this->getTimeout();
+        }
+
+        return $this->time() - $this->getTimeout();
+    }
+
+    protected $expiredTimeCache = null;
 
     /**
      * Get internal key for store/read a sorted list of sessions
@@ -235,10 +259,10 @@ class Session extends \yii\redis\Session
     private function getSessionIdsByKey(string $key, bool $withScores = false): array
     {
         if ($withScores) {
-            return $this->redis->zrevrangebyscore($key, time(), time() - $this->getTimeout(), 'WITHSCORES');
+            return $this->redis->zrevrangebyscore($key, $this->time(), $this->expiredTime(), 'WITHSCORES');
         }
 
-        return $this->redis->zrevrangebyscore($key, time(), time() - $this->getTimeout());
+        return $this->redis->zrevrangebyscore($key, $this->time(), $this->expiredTime());
     }
 
     /**

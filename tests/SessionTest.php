@@ -74,6 +74,22 @@ class SessionTest extends TestCase
         ];
     }
 
+    public function testTime()
+    {
+        $this->mockWebApplication();
+        $session = \Yii::$app->session;
+        $this->assertEquals($_SERVER["REQUEST_TIME_FLOAT"], $session->time());
+    }
+
+    public function testExpiredTime()
+    {
+        $this->mockWebApplication();
+        $session = \Yii::$app->session;
+        $this->assertEquals($_SERVER["REQUEST_TIME_FLOAT"] - $session->getTimeout(), $session->expiredTime(), 0.0000004);
+        $expired = [$session->expiredTime(false), $session->expiredTime(false)];
+        $this->assertEquals($expired[0], $expired[1], 0.0000004);
+    }
+
     /**
      * Test write session
      * @dataProvider sessionDataProvider
@@ -138,7 +154,7 @@ class SessionTest extends TestCase
                 /** @var \bscheshirwork\redis\Session $session */
                 $session = \Yii::$app->session;
                 $this->assertTrue($session->writeSession($sessionId, $sessionData));
-                $time[$key] = time();
+                $time[$key] = $_SERVER["REQUEST_TIME_FLOAT"];
             }
         }
 

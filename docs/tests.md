@@ -107,8 +107,8 @@ $config['databases']['redis']['hostname'] = 'redis';
 language: php
 
 php:
-- 7.0
 - 7.1
+- 7.2
 
 sudo: false
 
@@ -186,9 +186,9 @@ PHPStorm, попробуйте её.
 version: '2'
 services:
   php:
-    image: bscheshir/codeception:php7.1.9-fpm-yii2 #contain phpunit
+    image: bscheshir/codeception:php7.2.1-fpm-alpine-yii2 #contain phpunit
     volumes:
-      - ..:/project #src and tests shared to container
+      - ..:/var/www/html #src and tests shared to container
       - ~/.composer/cache:/root/.composer/cache
     environment:
       TZ: Europe/Moscow
@@ -197,7 +197,7 @@ services:
     depends_on:
       - redis
   redis:
-    image: redis:4.0.1-alpine
+    image: redis:4.0.7-alpine
     restart: always
     ports:
       - "6379"
@@ -271,15 +271,15 @@ $ docker-compose -f ./tests/docker-compose.yml run --rm --entrypoint composer ph
 
 Например, вывод может выглядить так:
 ```sh
-docker-compose://[/home/dev/projects/yii2-redis-session/tests/docker-compose.yml]:php/php /repo/vendor/phpunit/phpunit/phpunit --configuration /project/phpunit.xml.dist --teamcity
-Testing started at 13:58 ...
-PHPUnit 5.7.21 by Sebastian Bergmann and contributors.
+Testing started at 13:10 ...
+docker-compose://[/home/dev/projects/yii2-redis-session/tests/docker-compose.yml]:php/php /repo/vendor/phpunit/phpunit/phpunit --configuration /var/www/html/phpunit.xml.dist --teamcity
+PHPUnit 6.5.1 by Sebastian Bergmann and contributors.
 
 
 
-Time: 76 ms, Memory: 6.00MB
+Time: 108 ms, Memory: 8.00MB
 
-OK (24 tests, 48 assertions)
+OK (26 tests, 52 assertions)
 
 Process finished with exit code 0
 ``` 

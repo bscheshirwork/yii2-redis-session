@@ -6,9 +6,9 @@
 version: '2'
 services:
   php:
-    image: bscheshir/codeception:php7.1.9-fpm-yii2 #contain phpunit
+    image: bscheshir/codeception:php7.2.1-fpm-alpine-yii2 #contain phpunit
     volumes:
-      - ..:/project #src and tests shared to container
+      - ..:/var/www/html #src and tests shared to container
       - ~/.composer/cache:/root/.composer/cache
     environment:
       TZ: Europe/Moscow
@@ -17,7 +17,7 @@ services:
     depends_on:
       - redis
   redis:
-    image: redis:4.0.1-alpine
+    image: redis:4.0.7-alpine
     restart: always
     ports:
       - "6379"
